@@ -1,8 +1,3 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
 - master
 
@@ -10,21 +5,18 @@ pool:
   name: kunal-personal-pool
 
 steps:
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '11'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'  # Change to 'AzureStorage' if you need to download JDK
-    cleanDestinationDirectory: true
-  displayName: 'Install JDK 11'
+- script: |
+    echo "JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> $HOME/.bashrc
+    echo "PATH=$JAVA_HOME/bin:$PATH" >> $HOME/.bashrc
+    source $HOME/.bashrc
+  displayName: 'Set JAVA_HOME Environment Variable'
 
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
+    javaHomeOption: 'Path'
+    jdkDirectory: '/usr/lib/jvm/java-11-openjdk-amd64'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
