@@ -21,6 +21,9 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
   displayName: 'Build with Maven'
+- task: WhiteSource@21
+  inputs:
+    cwd: '$(System.DefaultWorkingDirectory)'
 - task: CopyFiles@2
   inputs:
     Contents: '**/*.war'
